@@ -2,22 +2,23 @@
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 
 const path = ref()
+let length: number
 const render = (progress: number) => {
-  const length = path.value.getTotalLength()
-  path.value.style.strokeDasharray = length * progress
-  // path.value.style.strokeDashoffset = length * (1 - progress)
+  path.value.style.strokeDasharray = `${length * progress} ${length}`
 }
 let progress = 0, timer: ReturnType<typeof window.requestAnimationFrame>
 const getProgress = () => {
   progress += 0.002
   if (progress >= 1) {
     progress = 0
+    window.cancelAnimationFrame(timer)
   }
   render(progress)
   timer = window.requestAnimationFrame(getProgress)
 }
 
 onMounted(() => {
+  length = path.value.getTotalLength()
   timer = window.requestAnimationFrame(getProgress)
 })
 onBeforeUnmount(() => {
