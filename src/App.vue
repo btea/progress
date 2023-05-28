@@ -27,6 +27,23 @@ const getProgress = () => {
   progress += 0.001 * infoLeng.clock
   if (progress >= 1) {
     infoLeng.clock = -1
+    // 添加一个阴影
+    one.value.style.filter = 'url(#glow)'
+    two.value.style.filter = 'url(#glow)'
+    three.value.style.filter = 'url(#glow)'
+    four.value.style.filter = 'url(#glow)'
+    five.value.style.filter = 'url(#glow)'
+    window.cancelAnimationFrame(timer)
+    // 发光5s后继续绘制动画
+    setTimeout(() => {
+      one.value.style.filter = 'none'
+      two.value.style.filter = 'none'
+      three.value.style.filter = 'none'
+      four.value.style.filter = 'none'
+      five.value.style.filter = 'none'
+      timer = window.requestAnimationFrame(getProgress)
+    }, 5000)
+    return
   } 
   if(progress <= 0) {
     infoLeng.clock = 1
@@ -58,12 +75,20 @@ onBeforeUnmount(() => {
           <stop offset="50%" stop-color="#09f" />
           <stop offset="100%" stop-color="#f00" />
         </linearGradient>
+        <!-- 路径添加一个发光的效果 -->
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"></feGaussianBlur>
+          <feMerge>
+            <feMergeNode in="coloredBlur"></feMergeNode>
+            <feMergeNode in="SourceGraphic"></feMergeNode>
+          </feMerge>
+        </filter>
       </defs>
       <path d="M 0,0 L 600,0 L 600,600 L 0,600 L 0,0 z" stroke-width="10" stroke="url(#gradient)" fill="none" ref="one"></path>
       <path d="M 300,0 L 600,300 L 300,600 L 0,300 L 300,0" stroke-width="5" stroke="url(#gradient)" fill="none" ref="two"></path>
       <circle cx="300" cy="300" r="200" stroke="url(#gradient)" fill="none" stroke-width="5" ref="three"></circle>
       <!-- 绘制三角形 -->
-      <path d="M 300,100 L 470,400 L 130,400 L 300,100" stroke-width="5" stroke="url(#gradient)" fill="none" ref="four"></path>
+      <path d="M 300,100 L 130,400 L 470,400 L 300,100" stroke-width="5" stroke="url(#gradient)" fill="none" ref="four"></path>
       <!-- 反反向三角形 -->
       <path d="M 300,500 L 130,200 L 470,200 L 300,500" stroke-width="5" stroke="url(#gradient)" fill="none" ref="five"></path>
     </svg>
